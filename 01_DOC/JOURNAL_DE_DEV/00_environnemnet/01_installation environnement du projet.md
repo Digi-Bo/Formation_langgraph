@@ -229,6 +229,7 @@ poetry install --no-root
 
 Si vous rencontrez cette erreur lors de la visualisation du graphe :
 
+
 ```bash
 # Installez le module manquant
 poetry add grandalf
