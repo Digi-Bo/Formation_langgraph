@@ -50,11 +50,11 @@ graph = builder.compile()
 print(graph.get_graph().draw_mermaid())
 graph.get_graph().print_ascii()
 
-
+ 
 
 # pour exécuter notre graphe avec un tweet initial :
 if __name__ == "__main__":
-    print("Hello LangGraph")
+    print("Hello LangGraph") 
     inputs = HumanMessage(content="""Améliore ce tweet : :"
                                     @LangChainAI
 La nouvelle fonctionnalité "Tool Calling" est vraiment super !
@@ -65,3 +65,4 @@ J'ai réalisé une vidéo à propos de votre dernier article de blog.
 
                                   """)
     response = graph.invoke(inputs)
+    print(response)
