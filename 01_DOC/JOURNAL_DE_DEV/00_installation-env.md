@@ -1,155 +1,170 @@
-# Configuration d'un projet d'agent de réflexion avec LangChain et LangGraph sur VS Code (Mac)
+# Guide d'installation - Agent de réflexion avec LangChain et LangGraph sur Mac
 
-Cet article vous guide à travers les étapes nécessaires pour configurer un projet d'agent de réflexion utilisant LangChain et LangGraph sur VS Code avec un Mac. Nous verrons comment créer l'environnement de développement, installer les dépendances nécessaires et préparer le projet pour l'implémentation de notre agent.
+Ce guide vous accompagne étape par étape dans la configuration d'un projet d'agent de réflexion utilisant LangChain et LangGraph sur un Mac. Nous aborderons la création de l'environnement, l'installation des dépendances et la préparation du projet pour éviter les erreurs courantes.
 
-## Création du répertoire de projet
+## 1. Création du répertoire de projet
 
-Pour commencer, nous allons créer un nouveau répertoire pour notre projet :
-
-1. Ouvrez le Terminal sur votre Mac
-2. Sur le bureau, créez un nouveau dossier nommé "ReflectionAgent" avec la commande `mkdir ~/Desktop/ReflectionAgent`
-3. Naviguez dans ce répertoire en utilisant la commande `cd ~/Desktop/ReflectionAgent`
-
-## Installation et configuration de Poetry avec Homebrew
-
-Nous utiliserons Poetry pour gérer notre environnement virtuel et nos dépendances :
-
-1. Si vous n'avez pas encore installé Homebrew, exécutez cette commande :
-   ```bash
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   ```
-
-2. Installez Poetry avec Homebrew :
-   ```bash
-   brew install poetry
-   ```
-
-3. Vérifiez que Poetry est correctement installé :
-   ```bash
-   poetry --version
-   ```
-
-## Initialisation du projet Poetry avec la bonne version Python
-
-1. Dans le répertoire de votre projet, initialisez Poetry :
-   ```bash
-   cd ~/Desktop/ReflectionAgent
-   poetry init
-   ```
-
-2. Lors de l'initialisation, acceptez les valeurs par défaut, mais quand on vous demande la version Python compatible, spécifiez :
-   ```
-   Compatible Python versions: >=3.9,<4.0
-   ```
-   
-   > **Important** : Ne spécifiez pas ">=3.12" comme dans l'exemple précédent, car cette version n'est pas compatible avec les bibliothèques que nous allons utiliser.
-
-3. Pour les dépendances et les dépendances de développement, choisissez de ne pas les ajouter interactivement (répondez "no"), nous les ajouterons séparément.
-
-4. Confirmez la génération du fichier `pyproject.toml`
-
-## Installation des dépendances
-
-Maintenant, installons les packages requis pour notre projet :
+Commençons par créer un espace de travail pour notre projet :
 
 ```bash
-poetry add python-dotenv
-poetry add black isort
-poetry add langchain
-poetry add langchain-openai
-poetry add langgraph
+# Créer un dossier pour notre projet
+mkdir -p ~/Documents/ReflectionAgent
+
+# Naviguer dans ce répertoire
+cd ~/Documents/ReflectionAgent
 ```
 
-Si vous utilisez Python 3.12 et rencontrez des problèmes de compatibilité, vous pouvez créer un environnement avec Python 3.11 :
+## 2. Installation et configuration de Poetry
+
+Poetry est un outil de gestion de dépendances moderne pour Python. Voici comment l'installer et le configurer :
+
+```bash
+# Installer Poetry via Homebrew (si Homebrew est déjà installé)
+brew install poetry
+
+# Si vous n'avez pas Homebrew, vous pouvez installer Poetry avec cette commande
+# curl -sSL https://install.python-poetry.org | python3 -
+
+# Vérifier l'installation
+poetry --version
+```
+
+## 3. Initialisation du projet Poetry avec la version Python appropriée
+
+⚠️ **Important** : Pour éviter les problèmes de compatibilité avec LangChain et LangGraph, nous utiliserons Python 3.11 plutôt que Python 3.12.
 
 ```bash
 # Installer Python 3.11 si nécessaire
 brew install python@3.11
 
-# Indiquer à Poetry d'utiliser Python 3.11
-poetry env use python3.11
+# S'assurer que Python 3.11 est disponible
+python3.11 --version
 
-# Puis installer les dépendances
-poetry add python-dotenv black isort langchain langchain-openai langgraph
+# Initialiser un nouveau projet Poetry
+cd ~/Documents/ReflectionAgent
+poetry init
+
+# Lors de l'initialisation interactive
+# - Acceptez les valeurs par défaut pour le nom, la version et la description
+# - Pour la version Python compatible, spécifiez : ">=3.9,<3.12"
+# - Pour les dépendances, répondez "no" (nous les ajouterons manuellement)
 ```
 
-Ces commandes installent :
-* `python-dotenv` pour charger les variables d'environnement
-* `black` et `isort` pour le formatage du code
-* `langchain` pour les fonctionnalités de base
-* `langchain-openai` pour utiliser le modèle GPT-3.5
-* `langgraph` (LangGraph) pour construire notre agent de réflexion
 
-## Configuration de VS Code
+## Installation des packages : 
 
-Maintenant, configurons VS Code pour notre projet :
+Maintenant, installons les packages requis pour notre projet :
 
-1. Lancez VS Code
-2. Sélectionnez "File > Open..." et choisissez le répertoire "ReflectionAgent" créé précédemment
-3. Dans VS Code, ouvrez un terminal intégré avec "Terminal > New Terminal"
-4. Configurez l'interpréteur Python pour utiliser l'environnement Poetry :
-   - Appuyez sur `Cmd+Shift+P` pour ouvrir la palette de commandes
-   - Tapez "Python: Select Interpreter" et sélectionnez cette option
-   - Choisissez l'interpréteur dans l'environnement virtuel Poetry (généralement indiqué par "(Poetry)")
+```python
 
-## Installation des extensions VS Code recommandées
+poetry add python-dotenv
+poetry add black isort
+poetry add langchain
+poetry add langchain-openai
+poetry add langgraph
+poetry add grandalf
 
-Pour améliorer votre expérience de développement, installez ces extensions VS Code :
 
-1. Python (Microsoft) - Support complet pour Python
-2. Pylance - Fonctionnalités avancées pour Python
-3. Python Indent - Indentation automatique
-4. Python Docstring Generator - Création facilitée de docstrings
-5. Black Formatter - Intégration de Black pour le formatage
 
-Pour installer ces extensions :
-- Cliquez sur l'icône Extensions dans la barre latérale (ou utilisez `Cmd+Shift+X`)
-- Recherchez chaque extension et cliquez sur "Install"
+```
 
-## Création du fichier de variables d'environnement
 
-Créons un fichier `.env` pour stocker nos clés API :
 
-1. Dans VS Code, créez un nouveau fichier en cliquant sur l'icône "New File" dans l'explorateur
-2. Nommez-le `.env` et ajoutez les variables d'environnement suivantes :
 
-```plaintext
+## 4. Configuration du fichier pyproject.toml
+
+Pour éviter les erreurs liées à l'installation du package racine, modifiez votre fichier `pyproject.toml` :
+
+```toml
+[tool.poetry]
+name = "reflectionagent"
+version = "0.1.0"
+description = "Agent de réflexion utilisant LangChain et LangGraph"
+authors = ["Votre Nom <votre.email@exemple.com>"]
+readme = "README.md"
+package-mode = false  # Ajoutez cette ligne pour éviter l'erreur d'installation du projet racine
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+python-dotenv = ">=1.1.0,<2.0.0"
+black = ">=25.1.0,<26.0.0"
+isort = ">=6.0.1,<7.0.0"
+langchain = ">=0.3.24,<0.4.0"
+langchain-openai = ">=0.3.14,<0.4.0"
+langgraph = ">=0.3.34,<0.4.0"
+grandalf = "^0.8"  # Nécessaire pour visualiser les graphes
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+```
+
+## 5. Création de l'environnement virtuel et installation des dépendances
+
+```bash
+# Spécifier explicitement Python 3.11 pour l'environnement
+poetry env use python3.11
+
+# Installer les dépendances définies dans pyproject.toml
+poetry install --no-root
+
+# Vérifier que les dépendances sont correctement installées
+poetry show
+```
+
+## 6. Configuration des variables d'environnement
+
+Créez un fichier `.env` à la racine de votre projet pour stocker les clés API nécessaires :
+
+```bash
+# Créer le fichier .env
+touch .env
+```
+
+Puis ajoutez-y vos clés :
+
+```
 OPENAI_API_KEY=votre_clé_api_openai
 LANGCHAIN_API_KEY=votre_clé_api_langsmith
 LANGCHAIN_TRACING_V2=true
 LANGCHAIN_PROJECT=Reflection Agent
 ```
 
-Ces variables permettent :
-* L'authentification auprès d'OpenAI
-* L'utilisation de LangSmith pour le traçage (tracing)
-* La définition du nom du projet dans LangSmith
+## 7. Ajout de .gitignore
 
-## Création du fichier principal
+Créez un fichier `.gitignore` pour éviter de versionner des fichiers sensibles :
 
-Créons maintenant notre fichier Python principal :
-
-1. Dans VS Code, créez un nouveau fichier Python en cliquant sur l'icône "New File"
-2. Nommez-le `main.py` et ajoutez le code de base suivant :
-
-```python
-from dotenv import load_dotenv
-
-# Chargement des variables d'environnement
-load_dotenv()
-
-if __name__ == "__main__":
-    print("Hello LangGraph!")
+```bash
+cat > .gitignore << EOF
+__pycache__/
+docker-compose.yml
+venv/
+.venv/
+.env
+EOF
 ```
 
-3. Pour exécuter le fichier, cliquez sur le bouton de lecture (▶️) en haut à droite ou utilisez le terminal intégré avec la commande `poetry run python main.py`
+## 8. Configuration de VS Code
 
-## Configuration des tâches VS Code (optionnel)
+### Installation des extensions recommandées
 
-Pour faciliter l'exécution de commandes fréquentes, configurons des tâches VS Code :
+Dans VS Code, installez les extensions suivantes :
+- Python (Microsoft)
+- Pylance
+- Python Indent
+- Python Docstring Generator
+- Black Formatter
 
-1. Créez un dossier `.vscode` à la racine du projet si ce n'est pas déjà fait
-2. Créez un fichier `tasks.json` dans ce dossier avec le contenu suivant :
+### Configuration des tâches VS Code
+
+1. Créez un dossier `.vscode` à la racine du projet
+2. Créez un fichier `tasks.json` dans ce dossier :
+
+```bash
+mkdir -p .vscode
+```
+
+Contenu du fichier `.vscode/tasks.json` :
 
 ```json
 {
@@ -174,108 +189,67 @@ Pour faciliter l'exécution de commandes fréquentes, configurons des tâches VS
 }
 ```
 
-Ces tâches peuvent être exécutées avec `Cmd+Shift+P` puis en tapant "Tasks: Run Task".
+## Exécution du projet
 
-## Vérification de la configuration
+Une fois tous les fichiers configurés, vous pouvez exécuter le projet :
 
-Pour confirmer que notre configuration est correcte :
+```bash
+# Via le terminal
+poetry run python main.py
 
-1. Dans le terminal intégré de VS Code, exécutez `poetry show` pour afficher les dépendances installées
-2. Vérifiez que les versions sont correctes :
-   * langchain version 0.3.24 (ou la plus récente disponible)
-   * langgraph version 0.3.34 (ou la plus récente disponible)
-3. Exécutez le fichier `main.py` pour vérifier que tout fonctionne correctement avec la commande :
-   ```bash
-   poetry run python main.py
-   ```
-
-## Dépannage des problèmes courants
-
-Si vous rencontrez des problèmes de compatibilité, voici quelques astuces :
-
-1. Si le message d'erreur indique un problème de versions Python, modifiez manuellement le fichier `pyproject.toml` :
-   ```toml
-   requires-python = ">=3.9,<4.0"  # Au lieu de ">=3.12"
-   ```
-
-2. Si vous avez déjà un environnement virtuel créé avec une version incompatible, supprimez-le et créez-en un nouveau :
-   ```bash
-   poetry env remove python
-   poetry env use python3.11  # Ou toute autre version compatible entre 3.9 et 3.11
-   ```
-
-3. En dernier recours, vous pouvez réinitialiser complètement le projet :
-   ```bash
-   rm -rf .venv poetry.lock pyproject.toml
-   # Puis recommencez l'initialisation avec les bonnes versions
-   ```
-
-
-
-
-
-
---- 
-
-# Créer une tâche personnalisée  à partir d'un template
-
-Ces tâches peuvent être crées puis exécutées avec `Cmd+Shift+P` puis en tapant "Tasks: Run Task".
-
-
-Vous avez ouvert la palette de commandes et vous êtes arrivé à l'étape de sélection d'un type de tâche. Cette liste montre les différents systèmes de tâches disponibles dans VS Code.
-
-Pour configurer la tâche personnalisée que nous voulons utiliser, suivez ces étapes :
-
-1. Sélectionnez "Afficher toutes les tâches..." (ou "Show all tasks..." si votre interface est en anglais) dans cette liste
-
-2. Si aucune tâche n'est encore configurée, VS Code vous proposera de créer un fichier `tasks.json`. Choisissez alors l'option "Create tasks.json file from template" (ou équivalent en français)
-
-3. Ensuite, sélectionnez "Others" ou "Autres" pour créer une tâche personnalisée
-
-4. VS Code créera alors un fichier `tasks.json` dans le dossier `.vscode` avec une configuration de base
-
-5. Remplacez le contenu de ce fichier par notre configuration :
-
-```json
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Run Main",
-            "type": "shell",
-            "command": "poetry run python main.py",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Format Code",
-            "type": "shell",
-            "command": "poetry run black . && poetry run isort .",
-            "problemMatcher": []
-        }
-    ]
-}
+# Ou via VS Code
+# Appuyez sur Cmd+Shift+P puis tapez "Tasks: Run Task" et sélectionnez "Run Main"
 ```
 
-6. Sauvegardez le fichier (`Cmd+S`)
+## 11. Dépannage des problèmes courants
 
-7. Maintenant, pour exécuter la tâche, appuyez à nouveau sur `Cmd+Shift+P` et tapez "Tasks: Run Task"
+### Erreur liée à l'architecture
 
-8. Vous devriez voir "Run Main" et "Format Code" dans la liste des tâches disponibles
+Si vous rencontrez une erreur du type:
 
+```
+ImportError: dlopen(...): tried: '...' (mach-o file, but is an incompatible architecture (have 'x86_64', need 'arm64'))
+```
 
+Cela signifie que le package a été compilé pour une architecture différente de celle de votre Mac. Solutions :
 
+```bash
+# Supprimez l'environnement virtuel actuel
+poetry env remove python
 
+# Assurez-vous d'avoir Python 3.11 pour votre architecture (Intel ou Apple Silicon)
+brew install python@3.11
 
+# Recreez l'environnement
+poetry env use python3.11
+poetry install --no-root
+```
 
-# La commande directe dans le terminal
+### Erreur "No module named 'grandalf'"
 
-1. Ouvrez un terminal dans VS Code avec `Terminal > New Terminal`
-2. Exécutez votre programme avec la commande :
-   ```bash
-   poetry run python main.py
-   ```
+Si vous rencontrez cette erreur lors de la visualisation du graphe :
 
-Cette méthode directe fonctionne toujours et est souvent plus rapide pour les tests simples.
+```bash
+# Installez le module manquant
+poetry add grandalf
+```
+
+### Erreur "No file/folder found for package reflectionagent"
+
+Ajoutez `package-mode = false` dans la section `[tool.poetry]` de votre fichier pyproject.toml ou utilisez l'option `--no-root` lors de l'installation :
+
+```bash
+poetry install --no-root
+```
+
+## Utilisation avancée - Modification des paramètres de l'agent
+
+Pour ajuster le comportement de l'agent, vous pouvez :
+
+1. Modifier le nombre d'itérations de réflexion (actuellement 6) dans la fonction `should_continue`
+2. Personnaliser les prompts de génération et de réflexion dans `chains.py`
+3. Changer le modèle utilisé (remplacer "o4-mini" par un autre modèle OpenAI compatible)
+
+---
+
+Ce guide complet devrait vous permettre de configurer et d'exécuter votre agent de réflexion sur Mac sans rencontrer les erreurs courantes. N'hésitez pas à explorer davantage les possibilités offertes par LangChain et LangGraph pour créer des agents plus sophistiqués.
