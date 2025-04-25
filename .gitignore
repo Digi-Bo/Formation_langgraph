@@ -3,3 +3,4 @@ docker-compose.yml
 venv/
 .venv/
 .env
+01_DOC/Prompt_Engineering
