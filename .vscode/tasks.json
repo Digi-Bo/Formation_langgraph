@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Main",
+            "type": "shell",
+            "command": "poetry run python main.py",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "poetry run black . && poetry run isort .",
+            "problemMatcher": []
+        }
+    ]
+}
