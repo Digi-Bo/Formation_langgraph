@@ -43,7 +43,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 
 # Import du schéma Pydantic qui définit la structure de sortie attendue
-from schemas import AnswerQuestion
+from schemas import AnswerQuestion, ReviseAnswer
 
 # Initialisation du modèle de langage (LLM)
 # o4-mini est une référence à un modèle OpenAI spécifique (ici probablement GPT-4 mini)
@@ -95,6 +95,32 @@ first_responder_prompt_template = actor_prompt_template.partial(
 first_responder = first_responder_prompt_template | llm.bind_tools(
     tools=[AnswerQuestion], tool_choice="AnswerQuestion"
 )
+
+
+
+
+# Définition des instructions pour l'agent de révision
+# Ces instructions guident le LLM pour améliorer la réponse initiale
+revise_instructions = """Revise your previous answer using the new information.
+     - You should use the previous critique to add important information to your answer.
+         - You MUST include numerical citations in your revised answer to ensure it can be verified.
+         - Add a "References" section to the bottom of your answer (which does not count towards the word limit). In form of:
+             - [1] https://example.com
+             - [2] https://example.com
+     - You should use the previous critique to remove superfluous information from your answer and make SURE it is not more than 250 words.
+ """
+
+# Création de la chaîne de révision (revisor)
+# Cette chaîne:
+# 1. Utilise le template de prompt principal avec les instructions de révision
+# 2. Force l'utilisation de la classe ReviseAnswer pour structurer la sortie
+# 3. Permettra d'intégrer les résultats de recherche et la critique à la réponse initiale
+revisor = actor_prompt_template.partial(
+     first_instruction=revise_instructions
+ ) | llm.bind_tools(tools=[ReviseAnswer], tool_choice="ReviseAnswer")
+
+
+
 
 # Section de test - s'exécute uniquement si ce fichier est lancé directement
 if __name__ == "__main__":
