@@ -4,7 +4,18 @@ reflectionagent-py3.11(base) ➜  ReflectionAgent git:(sections/02.21_ToolNode) 
 zsh: command not found: poetry
 
 
-## Régler le problème  `eval "$(/opt/homebrew/bin/brew shellenv)"`
+## Régler le problème ponctuellement  `eval "$(/opt/homebrew/bin/brew shellenv)"`
+
+
+
+## Régler le problème en exécutant `eval "$(/opt/homebrew/bin/brew shellenv)"` à chaque démarage
+
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+
 
 
 

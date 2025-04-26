@@ -1,20 +1,18 @@
 {
     "version": "2.0.0",
-    "tasks": [
+    "configurations": [
         {
-            "label": "Run Main",
-            "type": "shell",
-            "command": "poetry run python main.py",
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "name": "Python: Fichier courant",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
             }
-        },
-        {
-            "label": "Format Code",
-            "type": "shell",
-            "command": "poetry run black . && poetry run isort .",
-            "problemMatcher": []
         }
     ]
 }

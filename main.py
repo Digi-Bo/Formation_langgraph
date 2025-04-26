@@ -1,26 +1,37 @@
-# main.py
-"""
-Point d'entrée principal de l'application Reflexion.
+from typing import List
 
-Ce fichier sert de point de démarrage pour l'application d'agent réflexif.
-Pour l'instant, il contient uniquement un message de bienvenue mais il pourrait
-être étendu pour orchestrer les différents composants de l'application.
+from langchain_core.messages import BaseMessage, ToolMessage
+from langgraph.graph import END, MessageGraph
 
-Dépendances:
-- dotenv: Pour charger les variables d'environnement
-"""
+from chains import revisor, first_responder
+from tool_executor import execute_tools
 
-# Importe la fonction load_dotenv du module dotenv
-# Cette fonction permet de charger les variables d'environnement depuis un fichier .env
-from dotenv import load_dotenv
+MAX_ITERATIONS = 2
+builder = MessageGraph()
+builder.add_node("draft", first_responder)
+builder.add_node("execute_tools", execute_tools)
+builder.add_node("revise", revisor)
+builder.add_edge("draft", "execute_tools")
+builder.add_edge("execute_tools", "revise")
 
-# Charge les variables d'environnement à partir du fichier .env
-# Ces variables peuvent inclure des clés API, des configurations, etc.
-load_dotenv()
 
-# Point d'entrée du programme
-# Le bloc suivant ne s'exécute que si ce fichier est exécuté directement (pas importé)
-if __name__ == "__main__":
-    # Affiche un simple message pour confirmer que l'application a démarré
-    # Cette ligne sera remplacée par du code plus substantiel dans le futur
-    print("Hello Reflexion")
+def event_loop(state: List[BaseMessage]) -> str:
+    count_tool_visits = sum(isinstance(item, ToolMessage) for item in state)
+    num_iterations = count_tool_visits
+    if num_iterations > MAX_ITERATIONS:
+        return END
+    return "execute_tools"
+
+
+builder.add_conditional_edges("revise", event_loop)
+builder.set_entry_point("draft")
+graph = builder.compile()
+
+print(graph.get_graph().draw_mermaid())
+
+
+res = graph.invoke(
+    "Write about AI-Powered SOC / autonomous soc  problem domain, list startups that do that and raised capital."
+)
+# print(res[-1].tool_calls[0]["args"]["answer"])
+print(res)
